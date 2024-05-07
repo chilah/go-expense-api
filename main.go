@@ -2,22 +2,15 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/chilah/go-expense-api/internal/adapter/db"
+	"github.com/chilah/go-expense-api/internal/adapter/handler"
+	"github.com/chilah/go-expense-api/internal/adapter/repository"
+	"github.com/chilah/go-expense-api/internal/core/service"
 	"github.com/gofiber/fiber/v2"
 )
 
 const PORT = ":8080"
-
-type Expense struct {
-	ID          uint
-	CreateAt    time.Time
-	Description string
-	Amount      int
-	Category    int
-	Test        int
-}
 
 func main() {
 	supabase := db.New()
@@ -28,17 +21,14 @@ func main() {
 	app := fiber.New()
 	api := app.Group("/api")
 
-	api.Get("/ping", func(c *fiber.Ctx) error {
-		expense := &Expense{}
+	expense := api.Group("/expense")
+	expenseRepository := repository.NewUserRepository(db)
+	expenseService := service.NewExpenseService(expenseRepository)
+	expenseHandler := handler.NewExpenseHanlder(expenseService)
 
-		res, _ := db.Query("SELECT * from expense")
+	expense.Get("", expenseHandler.GetAll)
 
-		res.Scan(expense)
-
-		return c.Status(fiber.StatusOK).JSON(expense)
-	})
-
-	fmt.Println("hello world")
+	fmt.Printf("Start server on port%s successfully!", PORT)
 
 	app.Listen(PORT)
 }
