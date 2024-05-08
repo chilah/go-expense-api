@@ -28,3 +28,15 @@ func (es *ExpenseService) GetAll() (*[]domain.Expense, error) {
 
 	return expenses, nil
 }
+
+func (es *ExpenseService) Create() error {
+	err := es.er.Create()
+
+	return err
+}
+
+func (es *ExpenseService) UpdateByID() error {
+	err := es.er.UpdateByID()
+
+	return err
+}

@@ -29,3 +29,27 @@ func (eh *ExpenseHandler) GetAll(c *fiber.Ctx) error {
 		"data":   expenses,
 	})
 }
+
+func (eh *ExpenseHandler) Create(c *fiber.Ctx) error {
+	err := eh.es.Create()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": "success",
+	})
+}
+
+func (eh *ExpenseHandler) UpdateByID(c *fiber.Ctx) error {
+	err := eh.es.UpdateByID()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": "Update expense successfully",
+	})
+}

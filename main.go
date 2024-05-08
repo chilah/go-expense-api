@@ -27,6 +27,8 @@ func main() {
 	expenseHandler := handler.NewExpenseHanlder(expenseService)
 
 	expense.Get("", expenseHandler.GetAll)
+	expense.Post("", expenseHandler.Create)
+	expense.Put("", expenseHandler.UpdateByID)
 
 	fmt.Printf("Start server on port%s successfully!", PORT)
 

@@ -45,3 +45,31 @@ func (ur *ExpenseRepository) GetAll() (*[]domain.Expense, error) {
 
 	return &expenses, nil
 }
+
+func (er *ExpenseRepository) Create() error {
+	_, err := er.db.Exec(
+		"insert into expense (description, amount, category_id, test_id) values ($1, $2, $3, $4)",
+		"go test", 200, 1, 1,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+
+		return err
+	}
+
+	return nil
+}
+
+func (er *ExpenseRepository) UpdateByID() error {
+	_, err := er.db.Exec(
+		"UPDATE expense SET amount = $1 WHERE id = $2",
+		5382, 2,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
