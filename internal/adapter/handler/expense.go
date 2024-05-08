@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 
+	"github.com/chilah/go-expense-api/internal/core/domain"
 	"github.com/chilah/go-expense-api/internal/core/port"
 	"github.com/gofiber/fiber/v2"
 )
@@ -42,11 +43,32 @@ func (eh *ExpenseHandler) Create(c *fiber.Ctx) error {
 	})
 }
 
+type UpdateExpense struct {
+	ID     uint `json:"id"`
+	Amount int  `json:"amount"`
+}
+
 func (eh *ExpenseHandler) UpdateByID(c *fiber.Ctx) error {
-	err := eh.es.UpdateByID()
+	inputExp := UpdateExpense{}
+
+	if err := c.BodyParser(&inputExp); err != nil {
+		return err
+	}
+
+	expense := domain.Expense{
+		ID:     inputExp.ID,
+		Amount: inputExp.Amount,
+	}
+
+	err := eh.es.UpdateByID(&expense)
 
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		// 	"status": fmt.Sprintf("Unable to find id: %d", inputExp.ID),
+		// })
+
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

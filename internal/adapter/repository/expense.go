@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/chilah/go-expense-api/internal/core/domain"
@@ -61,10 +62,11 @@ func (er *ExpenseRepository) Create() error {
 	return nil
 }
 
-func (er *ExpenseRepository) UpdateByID() error {
+func (er *ExpenseRepository) UpdateByID(e *domain.Expense) error {
+	fmt.Print(e)
 	_, err := er.db.Exec(
 		"UPDATE expense SET amount = $1 WHERE id = $2",
-		5382, 2,
+		e.Amount, e.ID,
 	)
 
 	if err != nil {
@@ -72,4 +74,23 @@ func (er *ExpenseRepository) UpdateByID() error {
 	}
 
 	return nil
+}
+
+func (er *ExpenseRepository) FindByID(id int) (*domain.Expense, error) {
+	exp := domain.Expense{}
+
+	err := er.db.QueryRow("SELECT * FROM expense WHERE id = $1;", id).Scan(
+		&exp.ID,
+		&exp.CreateAt,
+		&exp.Description,
+		&exp.Amount,
+		&exp.Category,
+		&exp.Test,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &exp, nil
 }
