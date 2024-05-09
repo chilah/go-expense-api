@@ -35,14 +35,14 @@ func (es *ExpenseService) Create() error {
 	return err
 }
 
-func (es *ExpenseService) UpdateByID(e *domain.Expense) error {
-	_, err := es.er.FindByID(int(e.ID))
+func (es *ExpenseService) UpdateByID(exp *domain.Expense) error {
+	_, err := es.er.FindByID(int(exp.ID))
 
 	if err != nil {
 		return err
 	}
 
-	updateErr := es.er.UpdateByID(e)
+	updateErr := es.er.UpdateByID(exp)
 
 	if updateErr != nil {
 		return err

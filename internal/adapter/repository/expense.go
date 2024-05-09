@@ -63,7 +63,7 @@ func (er *ExpenseRepository) Create() error {
 }
 
 func (er *ExpenseRepository) UpdateByID(e *domain.Expense) error {
-	fmt.Print(e)
+
 	_, err := er.db.Exec(
 		"UPDATE expense SET amount = $1 WHERE id = $2",
 		e.Amount, e.ID,
@@ -89,7 +89,7 @@ func (er *ExpenseRepository) FindByID(id int) (*domain.Expense, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unalble to find the expense by %d", id)
 	}
 
 	return &exp, nil

@@ -63,12 +63,11 @@ func (eh *ExpenseHandler) UpdateByID(c *fiber.Ctx) error {
 	err := eh.es.UpdateByID(&expense)
 
 	if err != nil {
-		// log.Fatal(err)
-		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-		// 	"status": fmt.Sprintf("Unable to find id: %d", inputExp.ID),
-		// })
-
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "Error",
+			"message": err.Error(),
+			"data":    nil,
+		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
